@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  webServer:
+    image: nginx:alpine
+    container_name: webserver
+    ports:
+      - "${APP_PORT}:80"
+      - "${APP_SSL_PORT}:443"
+    volumes:
+      - ./docker/nginx/sites:/etc/nginx/conf.d
+      - ./docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/ssl:/etc/ssl
+      - .:/var/www/html
+    networks:
+      - network
+
+  php:
+    build: docker/php
+    container_name: php
+    volumes:
+      - .:/var/www/html
+      - ./docker/php/conf/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - network
+
+networks:
+  network:
+    driver: "bridge"
