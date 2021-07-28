@@ -23,7 +23,9 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->configure('services');
+
+$app->withFacades();
 
 // $app->withEloquent();
 
@@ -50,7 +52,7 @@ $app->singleton(
 
 /*
 |--------------------------------------------------------------------------
-| Register Config Files
+| Register config Files
 |--------------------------------------------------------------------------
 |
 | Now we will register the "app" configuration file. If the file exists in
@@ -107,9 +109,16 @@ $app->configure('app');
 */
 
 $app->router->group([
-    'namespace' => 'App\Http\Controllers',
+    'namespace' => 'App\Http\Controllers\Web',
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
+});
+
+$app->router->group([
+    'prefix' => 'api',
+    'namespace' => 'App\Http\Controllers\Api',
+], function ($router) {
+    require __DIR__.'/../routes/api.php';
 });
 
 return $app;
