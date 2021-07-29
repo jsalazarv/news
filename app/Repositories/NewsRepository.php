@@ -10,10 +10,13 @@ class NewsRepository
     function search(Request $request) {
         $url = config('services.news_api.host').'/top-headlines';
         $apiKey = config('services.news_api.api_key');
-        $defaultQueryParams = ['country' => 'MX'];
+        $defaultQueryParams = [
+            'country' => 'MX',
+            'pageSize' => 10
+            ];
         $userQueryParams = $request->all();
 
-        $parameters = array_merge($defaultQueryParams, $userQueryParams,['apiKey' => $apiKey]);
+        $parameters = array_merge($defaultQueryParams, $userQueryParams, ['apiKey' => $apiKey]);
 
         $response = Http::get($url, $parameters);
 
