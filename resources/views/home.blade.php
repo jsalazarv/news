@@ -1,22 +1,61 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>News</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-</head>
-<body>
-<nav class="navbar navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="/logo.svg" alt="" width="150" height="30" class="d-inline-block align-text-top">
-        </a>
-    </div>
-</nav>
+@extends('/layouts.main')
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</body>
-</html>
+@push('styles')
+    <link rel="stylesheet" href="assets/css/home.css">
+@endpush
+
+@section('content')
+<section class="container">
+    <div class="col-12 col-md-6 offset-md-3">
+        <div class="input-group">
+            <button class="input-group-text bg-white" id="search-button">O</button>
+            <input type="text" class="form-control" id="search-input" autocomplete="off">
+        </div>
+    </div>
+    <div id="content" class="row row-cols-1 row-cols-md-3 g-4 mx-1 my-3"></div>
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+@endsection
+
+@push('scripts')
+    <script src="assets/js/fetch.js"></script>
+    <script>
+        window.addEventListener("load", async function (){
+            let content = document.querySelector('#content');
+            let searchButton = document.querySelector('#search-button');
+            let searchInput = document.querySelector('#search-input');
+
+            async function fetchAndRenderNews() {
+                let userQueryParams = {};
+                userQueryParams.q = searchInput.value;
+                let news = await getNewsQuery(userQueryParams);
+
+                renderNews(news.articles, content);
+            }
+
+            await fetchAndRenderNews();
+
+            searchInput.addEventListener('keyup', function (event) {
+               if(event.keyCode === 13) {
+                   fetchAndRenderNews();
+               }
+            });
+
+            searchButton.addEventListener('click', fetchAndRenderNews);
+        });
+    </script>
+@endpush
