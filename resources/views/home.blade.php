@@ -52,10 +52,14 @@
             searchInput.addEventListener('keyup', function (event) {
                if(event.keyCode === 13) {
                    fetchAndRenderNews();
+                   searchInput.value = "";
                }
             });
 
-            searchButton.addEventListener('click', fetchAndRenderNews);
+            searchButton.addEventListener('click', function () {
+                fetchAndRenderNews();
+                searchInput.value = "";
+            });
         });
     </script>
 @endpush
